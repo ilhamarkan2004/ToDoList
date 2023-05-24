@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerv.databinding.ListItemBinding
 
 
-class TodoAdapter(private val dataSet: MutableList<String>) :
+class TodoAdapter(private val viewModel: TodoViewModel) :
     RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
 
     /**
@@ -32,16 +33,16 @@ class TodoAdapter(private val dataSet: MutableList<String>) :
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
-        // Get element from your dataset at this position and replace the
+        // Get element from your viewModel.todos.value!! at this position and replace the
         // contents of the view with that element
-        viewHolder.todo_text.text = dataSet[position]
+        viewHolder.todo_text.text = viewModel.todos.value!![position].task
 
 
         //menghapus
         viewHolder.del_btn.setOnClickListener {
-            dataSet.removeAt(position)
+            viewModel.todos.value!!.removeAt(position)
             notifyItemRemoved(position)
-            notifyItemRangeChanged(position,dataSet.size)
+            notifyItemRangeChanged(position,viewModel.todos.value!!.size)
         }
 
         //Mengedit data
@@ -53,27 +54,28 @@ class TodoAdapter(private val dataSet: MutableList<String>) :
 
 
             //Mengambil data sebelumnya
-            val prevText = dataSet[position]
+            val prevText = viewModel.todos.value!![position].task
             val editText = view.findViewById<TextView>(R.id.editText)
             editText.text = prevText
 
             //dialog
             var alertDialog = AlertDialog.Builder(context)
             alertDialog.setTitle("Edit Item").setView(view).setPositiveButton("Update",
-                DialogInterface.OnClickListener { dialog,id ->
+                DialogInterface.OnClickListener { dialog, id ->
                     //edit
-                    dataSet[position]= editText.text.toString()
+                    viewModel.todos.value?.get(position)?.task = editText.text.toString()
                     notifyDataSetChanged()
                 })
-                .setNegativeButton("Cancel",DialogInterface.OnClickListener{
-                    dialog, which ->
+                .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
+                    dialog.dismiss()
                 })
+
             alertDialog.create().show()
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
-    override fun getItemCount() = dataSet.size
+    // Return the size of your viewModel.todos.value!! (invoked by the layout manager)
+    override fun getItemCount() = viewModel.todos.value!!.size
     class ViewHolder(binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         val todo_text = binding.todoItem
