@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recyclerv.databinding.ListItemBinding
 
 
 class TodoAdapter(private val dataSet: MutableList<String>) :
@@ -16,22 +17,16 @@ class TodoAdapter(private val dataSet: MutableList<String>) :
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder)
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val todo_text = itemView.findViewById<TextView>(R.id.todo_item)
-        val del_btn = itemView.findViewById<TextView>(R.id.btnDelete)
-        val edit_btn = itemView.findViewById<TextView>(R.id.btnEdit)
-
-
-    }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.list_item, viewGroup, false)
+        val inflater = LayoutInflater.from(viewGroup.context)
+        val binding = ListItemBinding.inflate(inflater)
 
-        return ViewHolder(view)
+
+        return ViewHolder(binding)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -79,5 +74,14 @@ class TodoAdapter(private val dataSet: MutableList<String>) :
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = dataSet.size
+    class ViewHolder(binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
+        val todo_text = binding.todoItem
+        val del_btn = binding.btnDelete
+        val edit_btn = binding.btnEdit
+
+
+    }
 }
+
+
