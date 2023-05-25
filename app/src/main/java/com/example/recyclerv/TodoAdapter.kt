@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerv.databinding.ListItemBinding
 
 
 class TodoAdapter(private val viewModel: TodoViewModel) :
-    RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+   ListAdapter<Todo, TodoAdapter.ViewHolder>(TodoDiffCallback()) {
 
     /**
      * Provide a reference to the type of views that you are using
@@ -41,8 +43,8 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
         //menghapus
         viewHolder.del_btn.setOnClickListener {
             viewModel.todos.value!!.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position,viewModel.todos.value!!.size)
+//            notifyItemRemoved(position)
+//            notifyItemRangeChanged(position,viewModel.todos.value!!.size)
         }
 
         //Mengedit data
@@ -64,7 +66,7 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
                 DialogInterface.OnClickListener { dialog, id ->
                     //edit
                     viewModel.todos.value?.get(position)?.task = editText.text.toString()
-                    notifyDataSetChanged()
+//                    notifyDataSetChanged()
                 })
                 .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
                     dialog.dismiss()
@@ -75,7 +77,7 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
     }
 
     // Return the size of your viewModel.todos.value!! (invoked by the layout manager)
-    override fun getItemCount() = viewModel.todos.value!!.size
+//    override fun getItemCount() = viewModel.todos.value!!.size
     class ViewHolder(binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         val todo_text = binding.todoItem
@@ -83,6 +85,15 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
         val edit_btn = binding.btnEdit
 
 
+    }
+}
+class TodoDiffCallback : DiffUtil.ItemCallback<Todo>(){
+    override fun areItemsTheSame(p0: Todo, p1: Todo): Boolean {
+       return p0.id == p1.id
+    }
+
+    override fun areContentsTheSame(p0: Todo, p1: Todo): Boolean {
+       return p0.equals(p1)
     }
 }
 
