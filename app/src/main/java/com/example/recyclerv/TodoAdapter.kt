@@ -37,12 +37,12 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
 
         // Get element from your viewModel.todos.value!! at this position and replace the
         // contents of the view with that element
-        viewHolder.todo_text.text = viewModel.todos.value!![position].task
+        viewHolder.todo_text.text = getItem(position).task
 
 
         //menghapus
         viewHolder.del_btn.setOnClickListener {
-            viewModel.todos.value!!.removeAt(position)
+            viewModel.removeTodo(viewHolder.adapterPosition)
 //            notifyItemRemoved(position)
 //            notifyItemRangeChanged(position,viewModel.todos.value!!.size)
         }
@@ -56,7 +56,7 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
 
 
             //Mengambil data sebelumnya
-            val prevText = viewModel.todos.value!![position].task
+            val prevText = getItem(position).task
             val editText = view.findViewById<TextView>(R.id.editText)
             editText.text = prevText
 
@@ -65,7 +65,10 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
             alertDialog.setTitle("Edit Item").setView(view).setPositiveButton("Update",
                 DialogInterface.OnClickListener { dialog, id ->
                     //edit
-                    viewModel.todos.value?.get(position)?.task = editText.text.toString()
+                    val editedText = editText.text.toString()
+//                    viewModel.todos.value?.get(position)?.task = editedText
+                    viewModel.updateTodo(viewHolder.adapterPosition, editedText)
+                    viewHolder.todo_text.text = editedText
 //                    notifyDataSetChanged()
                 })
                 .setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->

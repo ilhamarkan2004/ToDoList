@@ -3,6 +3,7 @@ package com.example.recyclerv
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,8 @@ import com.example.recyclerv.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+//    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: TodoAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var viewModel: TodoViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,9 +34,12 @@ class MainActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
         binding.btnNew.setOnClickListener{
-            viewModel.todos.value!!.add(Todo(3,binding.newtxt.text.toString()))
-            viewAdapter.notifyDataSetChanged()
+            viewModel.addTodo(binding.newtxt.text.toString())
+//            viewAdapter.notifyDataSetChanged()
         }
+        viewModel.todos.observe(this, Observer {
+            list -> viewAdapter.submitList(list.toMutableList())
+        })
         binding.root
     }
 }
