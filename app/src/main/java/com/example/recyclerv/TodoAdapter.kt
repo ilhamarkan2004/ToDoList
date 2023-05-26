@@ -37,7 +37,7 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
 
         // Get element from your viewModel.todos.value!! at this position and replace the
         // contents of the view with that element
-        viewHolder.todo_text.text = getItem(position).task
+        viewHolder.todo_text.text = getItem(viewHolder.adapterPosition).task
 
 
         //menghapus
@@ -56,7 +56,7 @@ class TodoAdapter(private val viewModel: TodoViewModel) :
 
 
             //Mengambil data sebelumnya
-            val prevText = getItem(position).task
+            val prevText = getItem(viewHolder.adapterPosition).task
             val editText = view.findViewById<TextView>(R.id.editText)
             editText.text = prevText
 

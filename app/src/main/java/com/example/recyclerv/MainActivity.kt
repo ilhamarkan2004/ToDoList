@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnNew.setOnClickListener{
             viewModel.addTodo(binding.newtxt.text.toString())
 //            viewAdapter.notifyDataSetChanged()
+            binding.newtxt.setText("")
         }
         viewModel.todos.observe(this, Observer {
             list -> viewAdapter.submitList(list.toMutableList())

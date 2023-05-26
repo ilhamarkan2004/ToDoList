@@ -15,11 +15,12 @@ class TodoViewModel : ViewModel() {
         _todos.value = arrayListOf(Todo(1, "mandi"), Todo(2, "bangun"))
     }
     fun addTodo(text : String){
+        val newId = _todos.value!!.size+1
 //        erorrr
 //        _todos.value!!.add(Todo(3,text))
 //        todos.postValue(_todos.value)
         val currentList = _todos.value ?: arrayListOf()
-        currentList.add(Todo(3, text))
+        currentList.add(Todo(newId, text))
         _todos.postValue(currentList)
     }
     fun removeTodo(pos : Int){
